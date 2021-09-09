@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>商品信息编辑</title>
+    <link href="css/jquery.stepy.css" th:href="@{/css/jquery.stepy.css}" rel="stylesheet">
+    <div th:include="common :: commonheader"></div>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <style>
+        .layui-form-pane, .layui-form-label {
+            width: 110px;
+            padding: 8px 15px;
+            height: 38px;
+            line-height: 20px;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 2px 0 0 2px;
+            text-align: center;
+            background-color: #FBFBFB;
+            overflow: hidden;
+            box-sizing: border-box
+        }
+    </style>
+</head>
+
+<body class="sticky-header">
+<section>
+    <div th:replace="common :: #leftmenu"></div>
+
+    <!-- main content start-->
+    <div class="main-content">
+        <div th:replace="common :: headermenu"></div>
+
+        <!-- 页面标题开始-->
+        <div class="page-heading">
+            <h3>
+                商品信息编辑
+            </h3>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">后台主页</a>
+                </li>
+                <li>
+                    <a href="#">商品信息管理</a>
+                </li>
+                <li class="active">商品信息编辑</li>
+            </ul>
+        </div>
+        <!-- 页面标题结束-->
+
+        <!--内容区域开始-->
+        <div class="wrapper" style="font:14px STKaiti;color: #6b6b6b;">
+            <div class="col-md-12">
+                <section class="panel">
+                    <header class="panel-heading">商品信息编辑</header>
+                    <div class="panel-body" style="height: 909px">
+                        <form class="layui-form"
+                              style="margin: 0 auto;max-width: 460px;padding-top: 40px;"
+                              lay-filter="example">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">商品ID:</label>
+                                <div class="layui-input-block">
+                                    <input type="number" placeholder="请填写商品ID" name="id"
+                                           class="layui-input" lay-verify="number" required/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">商品名称:</label>
+                                <div class="layui-input-block">
+                                    <input type="text" placeholder="请填写商品名称"
+                                           name="name" class="layui-input" required>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">商品金额:</label>
+                                <div class="layui-input-block">
+                                    <input type="number" placeholder="请填写商品金额" name="amount"
+                                           class="layui-input" lay-verify="number" required>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">商品类型:</label>
+                                <div class="layui-input-block">
+                                    <select lay-verify="required" name="category">
+                                        <option value="0" selected>请选择</option>
+                                        <option value="水果">水果</option>
+                                        <option value="蔬菜">蔬菜</option>
+                                        <option value="零食">零食</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">商品数量:</label>
+                                <div class="layui-input-block">
+                                    <input type="number" placeholder="请填写商品数量" name="num"
+                                           class="layui-input" lay-verify="number" required>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">生产日期</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="date" id="date" lay-verify="date"
+                                           placeholder="yyyy-MM-dd"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">商品产地：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" placeholder="请填写商品产地" name="address"
+                                           class="layui-input" required>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">审核人:</label>
+                                <div class="layui-input-block">
+                                    <select name="reviewer" lay-verify="required">
+                                        <option value="" selected>请选择</option>
+                                        <option value="张三">张三</option>
+                                        <option value="李四">李四</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">备注说明:</label>
+                                <div class="layui-input-block">
+                                                            <textarea placeholder="备注……" name="notes"
+                                                                      class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn layui-btn-normal" lay-submit
+                                            lay-filter="saveBtn">确认保存
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <script th:src="@{/layui/layui.js}"></script>
+                    <script>
+                        layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+                            var form = layui.form
+                                , layer = layui.layer
+                                , layedit = layui.layedit
+                                , laydate = layui.laydate
+                                , data = JSON.parse(sessionStorage.getItem("data"));
+                            //表单赋值
+                            form.val("example", {
+                                "id": data.id
+                                , "name": data.name
+                                , "amount": data.amount
+                                , "category": data.category
+                                , "num": data.num
+                                , "date": data.date
+                                , "address": data.address
+                                , "reviewer": data.reviewer
+                                , "notes": data.notes
+                            });
+
+                            //日期
+                            laydate.render({
+                                elem: '#date'
+                            });
+                            laydate.render({
+                                elem: '#date1'
+                            });
+                            //监听提交
+                            form.on('submit(saveBtn)', function (data) {
+                                layer.alert(JSON.stringify(data), {
+                                    title: '最终的提交信息'
+                                })
+                                return false;
+                            });
+                        });
+                    </script>
+                </section>
+            </div>
+        </div>
+        <!--内容区域结束-->
+
+        <!--footer section start-->
+        <div th:replace="common :: #footer"></div>
+        <!--footer section end-->
+    </div>
+    <!-- main content end-->
+
+</section>
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<div th:replace="common :: #commonscript"></div>
+</body>
+
+</html>

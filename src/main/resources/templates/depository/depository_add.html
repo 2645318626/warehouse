@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>创建仓库</title>
+    <div th:include="common :: commonheader"></div>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <style>
+        .layui-form-pane ,.layui-form-label {
+            width: 110px;
+            padding: 8px 15px;
+            height: 38px;
+            line-height: 20px;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 2px 0 0 2px;
+            text-align: center;
+            background-color: #FBFBFB;
+            overflow: hidden;
+            box-sizing: border-box
+        }
+    </style>
+</head>
+
+<body class="sticky-header">
+<section>
+    <div th:replace="common :: #leftmenu"></div>
+
+    <!-- main content start-->
+    <div class="main-content">
+        <div th:replace="common :: headermenu"></div>
+
+        <!-- 页面标题开始-->
+        <div class="page-heading">
+            <h3>
+                创建仓库
+            </h3>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">后台主页</a>
+                </li>
+                <li>
+                    <a href="#">库存管理</a>
+                </li>
+                <li class="active">创建仓库</li>
+            </ul>
+        </div>
+        <!-- 页面标题结束-->
+
+        <!--内容区域开始-->
+        <div class="wrapper" style="font:14px STKaiti;color: #6b6b6b;">
+            <div class="col-md-12">
+                <section class="panel">
+                    <header class="panel-heading">仓库详情</header>
+                    <div class="panel-body">
+                        <form class="layui-form" action="" style="margin: 50px 100px;">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">仓库名称：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="" lay-verify="required" placeholder="请填写仓库名称"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">地址：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="" lay-verify="required" placeholder="请填写仓库地址"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">仓库容量：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="" lay-verify="required" placeholder="请填写仓库容量"
+                                           class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">仓库种类:</label>
+                                <div class="layui-input-block">
+                                    <select name="" lay-filter="aihao">
+                                        <option value="" selected=""></option>
+                                        <option value="0">水果</option>
+                                        <option value="1">蔬菜</option>
+                                        <option value="2">零食</option>
+                                        <option value="3">文具</option>
+                                        <option value="4">生活用品</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">仓库介绍:</label>
+                                <div class="layui-input-block">
+                                    <textarea placeholder="请填写仓库介绍……" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+            <script th:src="@{/layui/layui.js}" charset="utf-8"></script>
+            <!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+            <script>
+                layui.use(['form', 'layedit', 'laydate'], function () {
+                    var form = layui.form
+                        , layer = layui.layer
+                        , layedit = layui.layedit
+                        , laydate = layui.laydate;
+
+                    //日期
+                    laydate.render({
+                        elem: '#date'
+                    });
+                    laydate.render({
+                        elem: '#date1'
+                    });
+
+                    //创建一个编辑器
+                    var editIndex = layedit.build('LAY_demo_editor');
+
+                    //自定义验证规则
+                    form.verify({
+                        title: function (value) {
+                            if (value.length < 5) {
+                                return '标题至少得5个字符啊';
+                            }
+                        }
+                        , pass: [
+                            /^[\S]{6,12}$/
+                            , '密码必须6到12位，且不能出现空格'
+                        ]
+                        , content: function (value) {
+                            layedit.sync(editIndex);
+                        }
+                    });
+
+                    //监听指定开关
+                    form.on('switch(switchTest)', function (data) {
+                        layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
+                            offset: '6px'
+                        });
+                        layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
+                    });
+
+                    //监听提交
+                    form.on('submit(demo1)', function (data) {
+                        layer.alert(JSON.stringify(data.field), {
+                            title: '最终的提交信息'
+                        })
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+        <!--内容区域结束-->
+
+        <!--footer section start-->
+        <div th:replace="common :: #footer"></div>
+        <!--footer section end-->
+
+    </div>
+    <!-- main content end-->
+</section>
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<div th:replace="common :: #commonscript"></div>
+
+
+</body>
+
+</html>

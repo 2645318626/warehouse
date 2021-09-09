@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>仓库信息查询</title>
+    <div th:include="common :: commonheader"></div>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+
+</head>
+
+<body class="sticky-header">
+<section>
+    <div th:replace="common :: #leftmenu"></div>
+
+    <!-- main content start-->
+    <div class="main-content">
+        <div th:replace="common :: headermenu"></div>
+
+        <!-- 页面标题开始-->
+        <div class="page-heading">
+            <h3>
+                库存查询统计
+            </h3>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">后台主页</a>
+                </li>
+                <li>
+                    <a href="#">库存查询统计</a>
+                </li>
+                <li class="active"> 库存查询统计表</li>
+            </ul>
+        </div>
+        <!-- 页面标题结束-->
+
+        <!--内容区域开始-->
+        <div class="wrapper">
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            库存列表
+                            <span class="tools pull-right">
+                                    <a href="javascript:;" class="fa fa-chevron-down"></a>
+                                    <a href="javascript:;" class="fa fa-times"></a>
+                                </span>
+                        </header>
+                        <div class="panel-body">
+                            <div class="adv-table editable-table">
+                                <div class="clearfix">
+                                    <!-- 查询条件开始 -->
+                                    <form action="" method="post" id="searchFrm" lay-filter="searchFrm"
+                                          class="layui-form layui-form-pane">
+                                        <div class="layui-form-item">
+                                            <div class="layui-inline" style="width: 100px">
+                                                <select name="select" lay-filter="mySelect">
+                                                    <option value="搜索" selected>搜索</option>
+                                                    <option value="仓库id">仓库类型</option>
+                                                    <option value="商品类型">商品类型</option>
+                                                    <option value="商品代码">商品代码</option>
+                                                    <option value="商品名称">商品名称</option>
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="search" autocomplete="off"
+                                                       class="layui-input">
+                                            </div>
+                                            <div class="layui-inline">
+                                                <div class="layui-input-inline">
+                                                    <button type="submit" class="layui-btn" lay-submit=""
+                                                            lay-filter="doSearch"><span
+                                                            class="layui-icon layui-icon-search"></span>查询
+                                                    </button>
+                                                    <button type="reset" class="layui-btn layui-btn-warm"><span
+                                                            class="layui-icon layui-icon-refresh-1"></span>重置
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- 查询条件结束-->
+                                </div>
+                                <!--工具栏-->
+                                <script type="text/html" id="toolbarDemo">
+                                    <div class="layui-btn-container">
+                                        <button id="export" lay-submit="" class="layui-btn layui-btn-normal layui-btn-sm data-add-btn"
+                                                lay-filter="export">
+                                            <i class="layui-icon">&#xe67d;</i>导出Excel表格
+                                        </button>
+                                    </div>
+                                </script>
+                                <table class="layui-hide table table-striped table-hover table-bordered"
+                                       id="editable-sample" lay-filter="editable-sample"></table>
+                                <!--导出表 不展示-->
+                                <div style="display: none">
+                                    <table id="data_export"></table>
+                                </div>
+                                <script th:src="@{/layui/layui.js}"></script>
+                                <script type="text/javascript">
+                                    layui.use(['jquery', 'layer', 'form', 'table'], function () {
+                                        var $ = layui.jquery;
+                                        var layer = layui.layer;
+                                        var form = layui.form;
+                                        var table = layui.table;
+
+                                        table.render({
+                                            elem: '#editable-sample'
+                                            , url: 'json/data.json' //!!这里填写对应的接口
+                                            , toolbar: '#toolbarDemo'
+                                            , title: '用户数据表'
+                                            , totalRow: true
+                                            , page: true
+                                            , cols: [
+                                                [
+                                                    {type: 'checkbox', fixed: 'left'}
+                                                    , {
+                                                    field: 'id',
+                                                    title: '商品ID',
+                                                    width: 100,
+                                                    fixed: 'left',
+                                                    sort: true
+                                                }
+                                                    , {field: 'name', title: '商品名称', width: 100}
+                                                    , {field: 'description', title: '商品描述', width: 100}
+                                                    , {
+                                                    field: 'price',
+                                                    title: '商品价格',
+                                                    width: 100,
+                                                    sort: true,
+                                                    totalRow: true
+                                                }
+                                                    , {
+                                                    field: 'stock',
+                                                    title: '商品库存',
+                                                    width: 100,
+                                                    sort: true,
+                                                    totalRow: true,
+                                                    totalRowText: '合计'
+                                                }
+                                                    , {field: 'categorylevelone', title: '一级分类', width: 100}
+                                                    , {field: 'categoryleveltwo', title: '二级分类', width: 100}
+                                                    , {field: 'categorylevelthree', title: '三级分类', width: 100}
+                                                    , {field: 'fileName', title: '商品图片', templet: '#img', width: 100}
+                                                ]
+                                            ]
+                                        });
+
+                                        //导出表格
+                                        var exportData;
+                                        var ins1 = table.render({
+                                            elem: '#data_export',
+                                            url: "/list1", //数据接口
+                                            method: 'post',
+                                            title: '报表',
+                                            where: {
+                                                mycode: "all"
+                                            },
+                                            page:true,
+                                            cols: [
+                                                [
+                                                    {type: 'checkbox', fixed: 'left'}
+                                                    , {field: 'id', title: '商品ID', width: 150, fixed: 'left', sort: true, totalRowText: '合计'}
+                                                    , {field: 'name', title: '商品名称', width: 150}
+                                                    , {field: 'description', title: '商品描述', width: 150}
+                                                    , {field: 'price', title: '商品价格', width: 150, sort: true, totalRow: true}
+                                                    , {field: 'stock', title: '商品库存', width: 150, sort: true, totalRow: true}
+                                                    , {field: 'categorylevelone', title: '一级分类', width: 150}
+                                                    , {field: 'categoryleveltwo', title: '二级分类', width: 150}
+                                                    , {field: 'categorylevelthree', title: '三级分类', width: 150}
+                                                    , {field: 'fileName', title: '商品图片', templet: '#img'},
+                                                ]
+                                            ],
+                                            done: function (res, curr, count) {
+                                                exportData = res.data;
+                                            }
+                                        });
+                                        //导出按钮
+                                        $("#export").click(function () {
+                                            table.exportFile(ins1.config.id, exportData, 'xls');
+                                        });
+                                    })
+                                </script>
+                                <script type="text/html" id="img">
+                                    <img src="images/{{d.fileName}}"/>
+                                </script>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            仓库使用情况
+                            <span class="tools pull-right">
+                                    <a href="javascript:;" class="fa fa-chevron-down"></a>
+                                    <a href="javascript:;" class="fa fa-times"></a>
+                                </span>
+                        </header>
+                        <div class="panel-body">
+                            <!-- 查询条件开始 -->
+                            <form action="" method="post" id="" lay-filter="searchFrm"
+                                  class="layui-form layui-form-pane">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline" style="width: 100px">
+                                        <select name="select" lay-filter="mySelect">
+                                            <option value="仓库名称">仓库名称</option>
+                                            <option value="商品类型">商品类型</option>
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="search" autocomplete="off"
+                                               class="layui-input">
+                                    </div>
+                                    <div class="layui-inline">
+                                        <div class="layui-input-inline">
+                                            <button type="submit" class="layui-btn" lay-submit=""
+                                                    lay-filter="doSearch"><span
+                                                    class="layui-icon layui-icon-search"></span>查询
+                                            </button>
+                                            <button type="reset" class="layui-btn layui-btn-warm"><span
+                                                    class="layui-icon layui-icon-refresh-1"></span>重置
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- 查询条件结束-->
+
+                            <table class="layui-table"
+                                   lay-data="{width: 600,url:'json/data1.json', page:true, id:'test2', skin: 'row', even: true}">
+                                <thead>
+                                <tr>
+                                    <th lay-data="{field:'id', width:100, sort: true}">仓库ID</th>
+                                    <th lay-data="{field:'name', width:150}">仓库名称</th>
+                                    <th lay-data="{field:'num', width:100, style:'background-color: #009688; color: #fff;'}">
+                                        仓库数量
+                                    </th>
+                                    <th lay-data="{field:'capacity', width:100, style:'background-color: #6dc5a3; color: #fff;'}">
+                                        仓库容量
+                                    </th>
+                                    <th lay-data="{field:'category',width:150}">仓库类别</th>
+                                </tr>
+                                </thead>
+                            </table>
+                            <script>
+                                layui.use('table', function () {
+                                    var table = layui.table;
+                                });
+                            </script>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!--内容区域结束-->
+
+        <!--footer section start-->
+        <div th:replace="common :: #footer"></div>
+        <!--footer section end-->
+
+    </div>
+    <!-- main content end-->
+</section>
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<div th:replace="common :: #commonscript"></div>
+
+<!--data table-->
+<script type="text/javascript" src="js/data-tables/jquery.dataTables.js"></script>
+<script type="text/javascript" src="js/data-tables/DT_bootstrap.js"></script>
+
+</body>
+
+</html>

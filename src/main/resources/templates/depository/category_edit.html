@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>商品种类编辑</title>
+    <link href="css/jquery.stepy.css" th:href="@{/css/jquery.stepy.css}" rel="stylesheet">
+    <div th:include="common :: commonheader"></div>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <style>
+        .layui-form-pane, .layui-form-label {
+            width: 110px;
+            padding: 8px 15px;
+            height: 38px;
+            line-height: 20px;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 2px 0 0 2px;
+            text-align: center;
+            background-color: #FBFBFB;
+            overflow: hidden;
+            box-sizing: border-box
+        }
+    </style>
+</head>
+
+<body class="sticky-header">
+<section>
+    <div th:replace="common :: #leftmenu"></div>
+
+    <!-- main content start-->
+    <div class="main-content">
+        <div th:replace="common :: headermenu"></div>
+
+        <!-- 页面标题开始-->
+        <div class="page-heading">
+            <h3>
+                商品种类编辑
+            </h3>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">后台主页</a>
+                </li>
+                <li>
+                    <a href="#">商品信息管理</a>
+                </li>
+                <li class="active">商品种类编辑</li>
+            </ul>
+        </div>
+        <!-- 页面标题结束-->
+
+        <!--内容区域开始-->
+        <div class="wrapper" style="font:14px STKaiti;color: #6b6b6b;">
+            <div class="col-md-12">
+                <section class="panel">
+                    <header class="panel-heading">商品种类编辑</header>
+                    <div class="panel-body" style="height: 909px">
+                        <form class="layui-form"
+                              style="margin: 0 auto;max-width: 460px;padding-top: 40px;"
+                              lay-filter="example">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">商品种类ID:</label>
+                                <div class="layui-input-block">
+                                    <input type="number" placeholder="请填写商品种类ID" name="id"
+                                           class="layui-input" lay-verify="number" required/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">种类名称:</label>
+                                <div class="layui-input-block">
+                                    <input type="text" placeholder="请填写商品种类名称"
+                                           name="name" class="layui-input" required>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">种类描述:</label>
+                                <div class="layui-input-block">
+                                                            <textarea placeholder="商品种类描述……" name="notes"
+                                                                      class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn layui-btn-normal" lay-submit
+                                            lay-filter="saveBtn">确认保存
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <script th:src="@{/layui/layui.js}"></script>
+                    <script>
+                        layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+                            var form = layui.form
+                                , layer = layui.layer
+                                , layedit = layui.layedit
+                                , laydate = layui.laydate
+                                , data = JSON.parse(sessionStorage.getItem("data"));
+                            //表单赋值
+                            form.val("example", {
+                                "id": data.id
+                                , "name": data.name
+                                , "notes": data.notes
+                            });
+
+                            //监听提交
+                            form.on('submit(saveBtn)', function (data) {
+                                layer.alert(JSON.stringify(data), {
+                                    title: '最终的提交信息'
+                                })
+                                return false;
+                            });
+                        });
+                    </script>
+                </section>
+            </div>
+        </div>
+        <!--内容区域结束-->
+
+        <!--footer section start-->
+        <div th:replace="common :: #footer"></div>
+        <!--footer section end-->
+    </div>
+    <!-- main content end-->
+
+</section>
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<div th:replace="common :: #commonscript"></div>
+</body>
+
+</html>

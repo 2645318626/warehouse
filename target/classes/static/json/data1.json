@@ -1,0 +1,28 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 3000000,
+  "data": [
+    {
+      "id": "10001",
+      "name": "仓库1",
+      "num": "2",
+      "capacity": 152,
+      "category": "水果"
+    },
+    {
+      "id": "10002",
+      "name": "仓库2",
+      "num": "0",
+      "capacity": 545,
+      "category": "蔬菜"
+    },
+    {
+      "id": "10003",
+      "name": "仓库3",
+      "num": "4",
+      "capacity": 52,
+      "category": "零食"
+    }
+  ]
+}  
